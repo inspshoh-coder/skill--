@@ -205,6 +205,32 @@ function addTotalToS(){
     localStorage.setItem("s", s);
 }
 
+function addTotalToB(){
+
+    let total = Number(
+        document.getElementById("total").textContent
+    );
+
+    b += total;
+
+    document.getElementById("b").textContent = b;
+
+    localStorage.setItem("b", b);
+}
+
+{
+
+    let total = Number(
+        document.getElementById("total").textContent
+    );
+
+    s += total;
+
+    document.getElementById("s").textContent = s;
+
+    localStorage.setItem("s", s);
+}
+
 function exportCSV() {
 
     let total =
