@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ステータス管理</title>
+
+<style>
+body{
+    font-family:sans-serif;
+    text-align:center;
+    padding:20px;
+}
+
+.status{
+    margin:20px;
+    padding:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>ステータス管理</h1>
+
+<h2>初期値設定</h2>
+
+<p>S初期値</p>
+<input type="number" id="sInput">
+
+<p>B初期値</p>
+<input type="number" id="bInput">
+
+<br><br>
+
+<button onclick="saveInitialValues()">
+保存
+</button>
+
+<hr>
+
+<div class="status">
+    <h2>S（センス）</h2>
+    <p id="s">0</p>
+   <button onclick="addS(300)">SR +300</button>
+
+<button onclick="addS(1200)">UR +1200</button>
+
+<button onclick="addS(6000)">L +6000</button>
+
+
+</div>
+
+<div class="status">
+    <h2>B（やさしさ）</h2>
+    <p id="b">0</p>
+ <button onclick="addB(1)">アイスクリーム +1</button>
+<button onclick="addB(3)">LIKE看板 +3</button>
+<button onclick="addB(6)">くまのぬいぐるみ +6</button>
+<button onclick="addB(12)">クラッカー +12</button>
+
+<button onclick="addB(698)">黄金龍 +698</button>
+<button onclick="addB(1396)">友情爆誕 +1396</button>
+</div>
+
+<hr>
+
+<h2>アイテム計算</h2>
+
+<hr>
+
+<h3>アイテム①</h3>
+
+増加量<br>
+<input type="number" id="value1" value="0">
+
+<br><br>
+
+個数<br>
+<input type="number" id="count1" value="0">
+
+<hr>
+
+<h3>アイテム②</h3>
+
+増加量<br>
+<input type="number" id="value2" value="0">
+
+<br><br>
+
+個数<br>
+<input type="number" id="count2" value="0">
+
+<hr>
+
+<h3>アイテム③</h3>
+
+増加量<br>
+<input type="number" id="value3" value="0">
+
+<br><br>
+
+個数<br>
+<input type="number" id="count3" value="0">
+
+<hr>
+
+<button onclick="calculateTotal()">
+計算
+</button>
+
+<h3>
+合計: <span id="total">0</span>
+</h3>
+
+<button onclick="addTotalToS()">
+合計をSに追加
+</button>
+
+<button onclick="addTotalToB()">
+合計をBに追加
+</button>
+
+<button onclick="exportCSV()">
+CSV出力
+</button>
+
+<script>
+
+let s = Number(localStorage.getItem("s")) || 0;
+let b = Number(localStorage.getItem("b")) || 0;
+
+document.getElementById("s").textContent = s;
+document.getElementById("b").textContent = b;
+document.getElementById("sInput").value = s;
+document.getElementById("bInput").value = b;
+
+function addS(amount){
+
+    s += amount;
+
+    document.getElementById("s").textContent = s;
+
+    localStorage.setItem("s", s);
+}
+
+function addB(amount){
+
+    b += amount;
+
+    document.getElementById("b").textContent = b;
+
+    localStorage.setItem("b", b);
+}
+
+
+
+function saveInitialValues(){
+
+    s = Number(document.getElementById("sInput").value);
+    b = Number(document.getElementById("bInput").value);
+
+    localStorage.setItem("s", s);
+    localStorage.setItem("b", b);
+
+    document.getElementById("s").textContent = s;
+    document.getElementById("b").textContent = b;
+
+}
+
+function calculateTotal(){
+
+    let total = 0;
+
+    total += Number(document.getElementById("value1").value)
+           * Number(document.getElementById("count1").value);
+
+    total += Number(document.getElementById("value2").value)
+           * Number(document.getElementById("count2").value);
+
+    total += Number(document.getElementById("value3").value)
+           * Number(document.getElementById("count3").value);
+
+    document.getElementById("total").textContent = total;
+
+}
+
+function addTotalToS(){
+
+    let total = Number(
+        document.getElementById("total").textContent
+    );
+
+    s += total;
+
+    document.getElementById("s").textContent = s;
+
+    localStorage.setItem("s", s);
+}
+
+function exportCSV() {
+
+    let total =
+        Number(document.getElementById("value1").value)
+        * Number(document.getElementById("count1").value)
+
+      + Number(document.getElementById("value2").value)
+        * Number(document.getElementById("count2").value)
+
+      + Number(document.getElementById("value3").value)
+        * Number(document.getElementById("count3").value);
+
+    let csv =
+`項目,値
+S,${s}
+B,${b}
+アイテム合計,${total}`;
+
+    let blob = new Blob(
+        [csv],
+        {type:"text/csv"}
+    );
+
+    let link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "status.csv";
+
+    link.click();
+}
+
+function exportCSV() {
+
+    let total =
+        Number(document.getElementById("value1").value)
+        * Number(document.getElementById("count1").value)
+
+      + Number(document.getElementById("value2").value)
+        * Number(document.getElementById("count2").value)
+
+      + Number(document.getElementById("value3").value)
+        * Number(document.getElementById("count3").value);
+
+    let csv =
+`項目,値
+S,${s}
+B,${b}
+アイテム合計,${total}`;
+
+    let blob = new Blob(
+        [csv],
+        {type:"text/csv"}
+    );
+
+    let link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+
+    link.download = "status.csv";
+
+    link.click();
+}
+
+
+</script>
+
+</body>
+</html>
